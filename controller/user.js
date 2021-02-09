@@ -22,16 +22,26 @@ exports.getUsers = (req, res, next) => {
         res.send(result)
         res.end()
     })
-    .catch(err => console.log("error"))
+    .catch(err => {
+        console.log("err")
+        res.send({status: false, data: err})
+        res.end()
+    })
 }
 
 exports.getUserById = (req, res, next) => {
     const { id } = req.body
+    if (!id) res.send({status: false, message: "Id is required"}) 
+
     User.findById(id)
     .then(result => {
-        console.log("getUserById result", result, id)
-        res.send(result)
+        console.log("result", result)
+        res.send({status: true, data: result})
         res.end()
     })
-    .catch(err => console.log("error"))
+    .catch(err => {
+        console.log("err")
+        res.send({status: false, data: err.message})
+        res.end()
+    })
 }
