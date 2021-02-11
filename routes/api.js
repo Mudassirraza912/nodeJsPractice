@@ -6,6 +6,12 @@ const products = require('../controller/user')
 // Add User into Databse
 router.post('/addUser', products.addUser)
 
+// Sign in Request
+router.post('/signin', products.signin)
+
+// Remove User by Id
+router.post('/removeUser', products.removeUserById)
+
 // Get all User from Databse
 router.post('/getUser', products.getUsers)
 
