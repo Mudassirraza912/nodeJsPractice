@@ -14,13 +14,21 @@ const userSchema = Schema({
         type: String,
         required: true,
     },
+    phone: {
+        type: Number,
+        required: true,
+    },
     resetToken: {
-        type: String
+        type: String,
+        default: null,
     },
     resetTokenExpiration: {
-        type: Date
-    }  
-})
+        type: Date,
+        default: null,
+    } ,
+}, {
+    timestamps: true
+  })
 
 module.exports = mongoose.model("User", userSchema)
 

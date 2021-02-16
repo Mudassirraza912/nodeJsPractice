@@ -6,7 +6,7 @@ var validate = require("validate.js");
 
 // SIGNUP
 exports.addUser = (req, res, next) => {
-    const { name, email, password } = req.body
+    const { name, email, password, phone } = req.body
     var constraints = {
         name: {
             presence: true,
@@ -16,7 +16,15 @@ exports.addUser = (req, res, next) => {
             }
         },
         email: {
+            presence: true,
             email: true
+        },
+        phone: {
+            presence: true,
+            length: {
+                minimum: 11,
+                message: "must be at least 11 characters"
+              }
         },
         password: {
             presence: true,
@@ -33,7 +41,7 @@ exports.addUser = (req, res, next) => {
         if(userObj) return res.status(200).send({status: false, message: "User already exist"})
         bcrypt.hash(password, 12)
         .then((hashedPassword) => {
-            const user = new User({username: name, email: email, password: hashedPassword})
+            const user = new User({username: name, email: email, password: hashedPassword, phone: phone})
             user.save()
             .then((userDoc) => {
                 return res.status(200).send({status: true, message: "User Created Succesfully!", data: userDoc})
@@ -110,12 +118,32 @@ exports.removeUserById = (req, res, next) => {
 
     User.findByIdAndRemove(id)
     .then(result => {
-        console.log("result", result)
+        console.log("result removeUserById", result)
         if(!result) return res.send({status: false, message: "User not found!"})
         return res.send({status: true, message: "User Deleted!"})
     })
     .catch(err => {
-        console.log("err")
+        console.log("err removeUserById")
+        res.send({status: false, data: err.message})
+        res.end()
+    })
+}
+
+// Update User Controller
+exports.updateUser = (req, res, next) => {
+    const { id, phone } = req.body
+    if (!id) res.send({status: false, message: "Id is required"}) 
+    if (phone && phone.length < 11) res.send({status: false, message: "phone must be at least 11 characters"}) 
+
+
+    User.findByIdAndUpdate(id, req.body)
+    .then(result => {
+        console.log("result updateUser", result)
+        if(!result) return res.send({status: false, message: "User not found!"})
+        return res.send({status: true, message: "User Updated Sucessfully!"})
+    })
+    .catch(err => {
+        console.log("err updateUser")
         res.send({status: false, data: err.message})
         res.end()
     })

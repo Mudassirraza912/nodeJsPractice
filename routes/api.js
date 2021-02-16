@@ -18,6 +18,8 @@ router.post('/getUser', products.getUsers)
 // Get User by ID from Databse
 router.post('/getUserByid', products.getUserById)
 
+// update User 
+router.post('/updateUser', products.updateUser)
 
 
 module.exports = router
